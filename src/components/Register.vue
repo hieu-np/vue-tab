@@ -216,7 +216,8 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 export default {
-  setup() {
+  emits: ["clicked-something"],
+  setup({ emit }) {
     return { v$: useVuelidate() };
   },
   name: "Register",

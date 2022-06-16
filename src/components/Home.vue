@@ -4,7 +4,11 @@
 </template>
 
 <script>
+
 export default {
+  emits: ["clicked-something"],
+  setup({ emit }) {
+  },
   name: 'Home',
   data(){
     return {

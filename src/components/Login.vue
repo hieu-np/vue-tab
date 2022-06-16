@@ -93,11 +93,11 @@
             <div class="center p-buttonset mb-3">
               <Button icon="pi pi-check" type="submit" label="Login" />
               <Button
-                
                 icon="pi pi-refresh"
                 label="Reset Form"
                 class="p-button-secondary"
                 type="reset"
+                
               />
             </div>
           </template>
@@ -118,9 +118,11 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 export default {
-  setup() {
+  emits: ["clicked-something"],
+  setup({ emit }) {
     return { v$: useVuelidate() };
   },
+
   name: "Login",
   data() {
     return {
@@ -155,6 +157,7 @@ export default {
         this.resetForm();
       }
     },
+
     async handleSubmit(isFormValid) {
       this.submitted = true;
 
@@ -184,6 +187,8 @@ export default {
           life: 3000,
         });
         // this.$emit('signIn')
+        // this.handleClick()
+        this.$emit("clicked-something");
       } else {
         this.$toast.add({
           severity: "error",
@@ -206,6 +211,8 @@ export default {
 .login-card {
   display: flex;
   justify-content: center;
+  margin: 0;
+  padding: 0;
 }
 .border-card-sign {
   border: solid 1px rgb(24, 52, 98);

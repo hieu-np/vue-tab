@@ -1,6 +1,6 @@
 <template>
-  <Menu></Menu>
-  <router-view ></router-view>
+  <Menu v-bind:key="key"></Menu>
+  <router-view v-on:clicked-something="handleClickInParent"></router-view>
 </template>
 
 <script>
@@ -8,9 +8,23 @@ import Menu from './components/Menu.vue'
 
 export default {
   name: 'App',
+  emits: ["clicked-something"],
+  setup({ emit }) {
+    return {}
+  },
   components: {
     Menu
   },
+  data() {
+    return {
+      key: false
+    }
+  },
+  methods:{
+    handleClickInParent(){
+      this.key = !this.key
+    }
+  }
 
 }
 </script>
