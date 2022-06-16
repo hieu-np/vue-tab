@@ -4,29 +4,30 @@
 </template>
 
 <script>
-import Menu from './components/Menu.vue'
-
+import Menu from "./components/Menu.vue";
+import { provide } from "vue";
+import store from "@/store";
 export default {
-  name: 'App',
+  name: "App",
   emits: ["clicked-something"],
   setup({ emit }) {
-    return {}
+    provide('store', store)
+    return {};
   },
   components: {
-    Menu
+    Menu,
   },
   data() {
     return {
-      key: false
-    }
+      key: false,
+    };
   },
-  methods:{
-    handleClickInParent(){
-      this.key = !this.key
-    }
-  }
-
-}
+  methods: {
+    handleClickInParent() {
+      this.key = !this.key;
+    },
+  },
+};
 </script>
 
 <style>
@@ -34,20 +35,19 @@ export default {
 #app {
   font-family: "Fira Sans", sans-serif;
 }
-html{
+html {
   height: 100%;
-
 }
 
-*{
+* {
   margin: 0;
   padding: 0;
 }
 body {
   background-image: url("./assets/sea.jpg");
   background-size: cover;
-    background-repeat: no-repeat;
+  background-repeat: no-repeat;
   background-position: center;
-    height: 100%;
+  height: 100%;
 }
 </style>

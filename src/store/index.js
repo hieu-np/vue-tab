@@ -1,13 +1,20 @@
-import { createStore } from "vuex";
-import state from "./state";
-import getters from "./getters";
-import mutations from "./mutations";
-import actions from "./actions";
-const store = createStore({
-  state,
-  mutations,
-  actions,
-  getters,
+import { reactive } from "vue";
+
+const state = reactive({
+  isUserSign: false
 })
 
-export default store
+const methods = {
+  setUserSignIn(){
+    state.isUserSign = true;
+  },
+
+  setUserSignOut(){
+    state.isUserSign = false;
+  }
+}
+
+export default {
+  state,
+  methods
+}

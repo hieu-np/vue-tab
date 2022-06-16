@@ -25,6 +25,16 @@ const routes = [
     path: '/logout',
     name: 'Logout',
     component: Logout
+  },
+  {
+    path: '/userlist',
+    name: 'userlist',
+    component: ()=>import('./components/Dashboard.vue')
+  },
+  {
+    path: '/adminlist',
+    name: 'adminlist',
+    component: ()=>import('./components/AdminList')
   }
 ]
 

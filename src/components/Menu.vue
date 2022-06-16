@@ -1,5 +1,5 @@
 <template>
-  <TabMenu :model="isSign? itemSign : items" class="tran" />
+  <TabMenu :model="isSign? itemSign : items"/>
 </template>
 
 <script>
@@ -13,7 +13,9 @@ export default {
       itemSign: [
         { label: "Home", icon: "pi pi-fw pi-home", to:'/' },
         { label: '', icon: "pi pi-fw pi-user", to: '/' },
-        { label: "Sign Out", icon: "pi pi-fw pi-file", to:'/logout'},
+        { label: "User list", icon: "pi pi-fw pi-users", to:'/userlist'},
+        { label: "Admin List", icon: "pi pi-fw pi-hashtag", to:'/adminlist'},
+        { label: "Sign Out", icon: "pi pi-fw pi-sign-out", to:'/logout'},
       ],
       items: [
         { label: "Home", icon: "pi pi-fw pi-home", to:'/' },
@@ -33,9 +35,5 @@ export default {
 </script>
 
 <style>
-
-.tran{
-  background-color: rgba(255, 255, 255, 0.3) !important;
-}
 
 </style>

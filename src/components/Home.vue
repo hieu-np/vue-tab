@@ -1,14 +1,14 @@
 <template>
-  <h1>Home</h1>
-  <h1 v-if="user">{{user.username}}</h1>
+  <div class="home">
+    <div>Home</div>
+    <div v-if="user">Hello {{user.username}}</div>
+  </div>
 </template>
 
 <script>
-
 export default {
   emits: ["clicked-something"],
-  setup({ emit }) {
-  },
+  setup({ emit }) {},
   name: 'Home',
   data(){
     return {
@@ -25,5 +25,10 @@ export default {
 </script>
 
 <style>
-
+.home{
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
 </style>
