@@ -46,7 +46,7 @@ html {
 body {
   background-image: url("./assets/sea.jpg");
   background-size: cover;
-  background-repeat: no-repeat;
+  /* background-repeat: no-repeat; */
   background-position: center;
   height: 100%;
 }

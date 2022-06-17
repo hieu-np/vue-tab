@@ -15,7 +15,7 @@ export default {
       this.$router.push("/login");
       this.$emit("clicked-something");
     } else {
-      this.$router.push("/");
+      this.$router.push("/login");
     }
   }
   

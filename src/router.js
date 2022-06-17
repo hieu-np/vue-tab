@@ -35,6 +35,11 @@ const routes = [
     path: '/adminlist',
     name: 'adminlist',
     component: ()=>import('./components/AdminList')
+  },
+  {
+    path: '/detail/:id',
+    name: 'detail',
+    component: ()=>import('./components/Detail.vue')
   }
 ]
 

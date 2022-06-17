@@ -23,6 +23,12 @@ export default class CustomerService {
         })
     }
 
+    getAdminList() {
+        return axios.get('https://62947bc3a7203b3ed069dbdd.mockapi.io/users').then((res)=> {
+            return res.data
+        })
+    }
+
     getCustomersXLarge() {
         return fetch('demo/data/customers-xlarge.json').then(res => res.json())
                 .then(d => d.data);

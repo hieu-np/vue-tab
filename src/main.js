@@ -34,7 +34,7 @@ import './assets/bag.css'
 import './axios'
 
 createApp(App)
-.use(PrimeVue)
+.use(PrimeVue, {ripple: true})
 .use(router)
 .use(ToastService)
 .component('TabMenu', TabMenu)

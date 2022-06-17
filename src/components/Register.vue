@@ -216,6 +216,11 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 export default {
+  created() {
+    if (localStorage.getItem("user")) {
+        this.$router.push('/')
+    }
+  },
   emits: ["clicked-something"],
   setup({ emit }) {
     return { v$: useVuelidate() };
