@@ -97,7 +97,6 @@
                 label="Reset Form"
                 class="p-button-secondary"
                 type="reset"
-                
               />
             </div>
           </template>
@@ -113,6 +112,7 @@ import { required, email } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import { minLength, helpers } from "@vuelidate/validators";
 import axios from "axios";
+import MD5 from "crypto-js/md5";
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -120,7 +120,7 @@ function sleep(ms) {
 export default {
   created() {
     if (localStorage.getItem("user")) {
-        this.$router.push('/home')
+      this.$router.push("/home");
     }
   },
   emits: ["clicked-something"],
@@ -181,7 +181,7 @@ export default {
       // }
       this.user = res.data[0];
       if (
-        this.user.password === this.password &&
+        this.user.password === MD5(this.password).toString() &&
         this.user.email === this.email
       ) {
         localStorage.setItem("user", JSON.stringify(this.user));

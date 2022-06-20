@@ -37,9 +37,19 @@ const routes = [
     component: ()=>import('./components/AdminList')
   },
   {
-    path: '/detail/:id',
+    path: '/detail',
     name: 'detail',
     component: ()=>import('./components/Detail.vue')
+  },
+  {
+    path: '/changepass',
+    name: 'changepass',
+    component: ()=>import('./components/ChangePassword.vue')
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'PageNotFound',
+    component: ()=>import('./components/PageNotFound.vue')
   }
 ]
 

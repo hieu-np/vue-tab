@@ -5,7 +5,7 @@
         <Card class="border-card-register">
           <template #title>
             <div style="display: flex; justify-content: space-between">
-              <div class="green-900">Register Account</div>
+              <div class="green-900">Change Password</div>
               <i
                 id="loader"
                 class="pi pi-spin pi-spinner"
@@ -14,73 +14,6 @@
             </div>
           </template>
           <template #content>
-            <div class="mb-2">
-              <label for="username" class="label-sign">User Name</label>
-              <span class="p-input-icon-right mt-2" style="width: 100%">
-                <InputText
-                  type="text"
-                  id="username"
-                  v-model="v$.username.$model"
-                  :class="{ 'p-invalid': v$.username.$invalid && submitted }"
-                  style="width: 100%"
-                />
-                <i class="pi pi-user" />
-              </span>
-              <span v-if="v$.username.$error && submitted">
-                <span
-                  id="email-error"
-                  v-for="(error, index) of v$.username.$errors"
-                  :key="index"
-                >
-                  <small class="p-error">{{ error.$message }}</small>
-                </span>
-              </span>
-              <small
-                v-else-if="
-                  (v$.username.$invalid && submitted) ||
-                  v$.username.$pending.$response
-                "
-                class="p-error"
-                >{{
-                  v$.username.required.$message.replace("Value", "Username")
-                }}</small
-              >
-            </div>
-
-            <!-- Email -->
-            <div class="mb-2">
-              <label for="email" class="label-sign">Email</label>
-              <span class="p-input-icon-right mt-2" style="width: 100%">
-                <InputText
-                  type="text"
-                  id="email"
-                  v-model="v$.email.$model"
-                  :class="{ 'p-invalid': v$.email.$invalid && submitted }"
-                  style="width: 100%"
-                />
-                <i class="pi pi-at" />
-              </span>
-              <span v-if="v$.email.$error && submitted">
-                <span
-                  id="email-error"
-                  v-for="(error, index) of v$.email.$errors"
-                  :key="index"
-                >
-                  <small class="p-error">{{ error.$message }}</small>
-                </span>
-              </span>
-              <small
-                v-else-if="
-                  (v$.email.$invalid && submitted) ||
-                  v$.email.$pending.$response
-                "
-                class="p-error"
-                >{{
-                  v$.email.required.$message.replace("Value", "Email")
-                }}</small
-              >
-            </div>
-
             <!-- Password -->
             <div class="mb-3">
               <label for="password" class="label-sign">Password</label>
@@ -166,29 +99,25 @@
                 }}</small
               >
             </div>
-
-            <p>
-              Have an account?
-              <router-link to="/login" class="link-color"
-                >Sign in now!</router-link
-              >
-            </p>
           </template>
 
           <template #footer>
             <div class="center p-buttonset mb-3">
-              <Button
-                icon="pi pi-check"
-                class="p-button-success"
-                type="submit"
-                label="Register Account"
-              />
-              <Button
-                icon="pi pi-refresh"
-                label="Reset Form"
-                class="p-button-secondary"
-                type="reset"
-              />
+              <div>
+                <Button
+                  icon="pi pi-check"
+                  class="p-button-warning btn-update"
+                  type="submit"
+                  label="Update Password"
+                />
+              </div>
+              <router-link to="/adminlist">
+                <Button
+                  icon="pi pi-times"
+                  label="Cancel"
+                  class="p-button-secondary btn-update"
+                />
+              </router-link>
             </div>
           </template>
         </Card>
@@ -199,51 +128,56 @@
 </template>
 
 <script>
+import CustomerService from "./../userService";
 import { required, email } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import { maxLength, minLength, helpers, sameAs } from "@vuelidate/validators";
 import axios from "axios";
 import MD5 from "crypto-js/md5";
+// import MD5 from "crypto-js/md5";
 const RegisterVali = (value) =>
   value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})(?=.*?[#?!@$%^&*-])");
-// const contains = (param) =>
-//   helpers.withParams(
-//     { type: 'contains', value: param },
-//     (value) => !helpers.req(value) || value.match(param)
-//   )
-
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
 export default {
-  name: "Register",
-  created() {
-    if (localStorage.getItem("user")) {
-      this.$router.push("/home");
+  name: 'ChangePassword',
+  created(){
+    if (!localStorage.getItem("user")) {
+      this.$router.push("/login");
     }
   },
   emits: ["clicked-something"],
   setup({ emit }) {
     return { v$: useVuelidate() };
   },
-  
+  created() {
+    if (!localStorage.getItem("user")) {
+      this.$router.push("/login");
+    } else {
+      this.customerService.getAdmin(this.$route.query.id).then((data) => {
+        this.admin = data;
+        this.oldpassword = this.admin.password;
+      });
+    }
+  },
   data() {
     return {
+      admin: {},
+      customerService: new CustomerService(),
       isHidePassword: true,
       email: "",
       password: "",
       username: "",
       repassword: "",
+      oldpassword: '',
       showMessage: false,
       submitted: false,
     };
   },
   validations() {
     return {
-      email: {
-        required,
-        email,
-      },
       password: {
         required,
         minLength: minLength(8),
@@ -251,10 +185,6 @@ export default {
           " ***Tip: have one symbol, numeric, uppercase, lowercase?",
           RegisterVali
         ),
-      },
-      username: {
-        required,
-        maxLength: maxLength(10),
       },
       repassword: {
         required,
@@ -266,58 +196,46 @@ export default {
     };
   },
   methods: {
-    onChangHiden() {
-      this.isHidePassword = !this.isHidePassword;
-    },
-    toggleDialog() {
-      this.showMessage = !this.showMessage;
-
-      if (!this.showMessage) {
-        this.resetForm();
-      }
-    },
     async handleSubmit(isFormValid) {
       this.submitted = true;
       if (!isFormValid) {
         return;
       }
-
       loader.style.display = "block";
 
-      const getEmail = await axios.get(`users/?email=${this.email}`);
-
-      if (getEmail.data.length != 0) {
-        this.$toast.add({
-          severity: "error",
-          summary: "Register Failed",
-          detail: `This account already exists, please use another email`,
-          life: 5000,
-        });
-        this.submitted = false;
-        loader.style.display = "none";
-        return;
-      } else {
-        const passwordHash = MD5(this.password).toString();
-        const res = await axios.post("users", {
-          username: this.username,
-          email: this.email,
-          password: passwordHash,
-          // password: this.password,
-        });
+      let dataUpdatePass = {
+        password: MD5(this.password).toString(),
+        id: this.$route.query.id,
+      }
+      this.customerService.updatePassword(dataUpdatePass).then(() => {
         this.$toast.add({
           severity: "success",
-          summary: "Register Success",
-          detail: `Wellcome ${res.data.username}`,
+          summary: "Update Password success",
+          detail: `Update password info success`,
           life: 2000,
         });
-        loader.style.display = "none";
-        this.submitted = false;
-        await sleep(2000);
-        this.$router.push("/login");
-      }
+      });
+
+      // const res = await axios.post("users", {
+      //   username: this.username,
+      //   email: this.email,
+      //   password: passwordHash,
+      //   // password: this.password,
+      // });
+      // this.$toast.add({
+      //   severity: "success",
+      //   summary: "Register Success",
+      //   detail: `Wellcome ${res.data.username}`,
+      //   life: 2000,
+      // });
+
+      loader.style.display = "none";
+      this.submitted = false;
+      await sleep(2000);
+      this.$router.push("/adminlist");
     },
   },
-};
+}
 </script>
 
 <style scoped>
@@ -328,8 +246,8 @@ export default {
   margin: 0;
 }
 .border-card-register {
-  border: solid 1px #188a42;
-  border-top: solid 5px #188a42;
+  border: solid 1px #036476;
+  border-top: solid 5px #036476;
   border-radius: 15px;
   box-shadow: 10px 10px 30px;
   background-color: rgba(255, 255, 255, 0.5);
@@ -338,15 +256,19 @@ export default {
   font-weight: 700;
 }
 .green-900 {
-  color: #188a42;
+  color: #036476;
 }
 .center {
   display: flex;
   justify-content: center;
 }
 .link-color {
-  color: #188a42;
+  color: #036476;
   text-decoration: none;
   font-weight: 700;
+}
+.btn-update {
+  font-weight: bold;
+  color: #ffffff;
 }
 </style>
